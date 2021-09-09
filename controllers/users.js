@@ -1,10 +1,14 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const BadRequestError = require('../errors/BadRequestError');
 const DefaultError = require('../errors/DefaultError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
+
+const { JWT_SECRET, NODE_ENV } = process.env;
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user)
@@ -66,4 +70,26 @@ module.exports.createUser = (req, res, next) => {
           return next(new DefaultError(err.message));
         });
     }).catch((err) => next(new DefaultError(err.message)));
+};
+
+module.exports.login = (req, res, next) => {
+  const { password, email } = req.body;
+
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-secret', { expiresIn: '7d' });
+      res.cookie('_id', token, {
+        maxAge: 3600000 * 24 * 7,
+        httpOnly: true,
+        sameSite: true,
+      }).send({ message: 'Авторизация успешна' });
+    })
+    .catch((err) => {
+      if (err.message === 'invailidEmailOrPassword') {
+        return next(new UnauthorizedError(/* badEmailOrPass */));
+      } if (err.message.includes('emailError')) {
+        return next(new BadRequestError(/* badEmailOrPass */));
+      }
+      return next(new DefaultError(err.message));
+    });
 };

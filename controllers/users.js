@@ -9,6 +9,15 @@ const ConflictError = require('../errors/ConflictError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const { JWT_SECRET, NODE_ENV } = process.env;
+const {
+  usersIdMissing,
+  badValue,
+  wrongEmail,
+  emailTaken,
+  nameLengthErr,
+  aboutLengthErr,
+  badEmailOrPass,
+} = require('../utils/errorMessages');
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user)
@@ -18,9 +27,9 @@ module.exports.getCurrentUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'UnknownId') {
-        return next(new NotFoundError(/* usersIdMissing */));
+        return next(new NotFoundError(usersIdMissing));
       } if (err.name === 'CastError') {
-        return next(new BadRequestError(/* badValue */));
+        return next(new BadRequestError(badValue));
       }
       return next(new DefaultError(err.message));
     });
@@ -34,11 +43,11 @@ module.exports.updateProfile = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.message === 'UnknownId') {
-        return next(new NotFoundError(/* usersIdMissing */));
+        return next(new NotFoundError(usersIdMissing));
       } if (err.message.includes('nameError')) {
-        return next(new BadRequestError(/* nameLengthErr */));
+        return next(new BadRequestError(nameLengthErr));
       } if (err.message.includes('emailError')) {
-        return next(new BadRequestError(/* emailError */));
+        return next(new BadRequestError(wrongEmail));
       }
       return next(new DefaultError(err.message));
     });
@@ -57,15 +66,15 @@ module.exports.createUser = (req, res, next) => {
         .then((user) => res.send(user))
         .catch((err) => {
           if (err.message.includes('emailError')) {
-            return next(new BadRequestError(/* wrongEmail */));
+            return next(new BadRequestError(wrongEmail));
           } if (err.message.includes('linkError')) {
-            return next(new BadRequestError(/* badValue */));
+            return next(new BadRequestError(badValue));
           } if (err.code === 11000 && err.name === 'MongoError') {
-            return next(new ConflictError(/* emailTaken */));
+            return next(new ConflictError(emailTaken));
           } if (err.message.includes('nameError')) {
-            return next(new BadRequestError(/* nameLengthErr */));
+            return next(new BadRequestError(nameLengthErr));
           } if (err.message.includes('aboutError')) {
-            return next(new BadRequestError(/* aboutLengthErr */));
+            return next(new BadRequestError(aboutLengthErr));
           }
           return next(new DefaultError(err.message));
         });
@@ -86,9 +95,9 @@ module.exports.login = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'invailidEmailOrPassword') {
-        return next(new UnauthorizedError(/* badEmailOrPass */));
+        return next(new UnauthorizedError(badEmailOrPass));
       } if (err.message.includes('emailError')) {
-        return next(new BadRequestError(/* badEmailOrPass */));
+        return next(new BadRequestError(badEmailOrPass));
       }
       return next(new DefaultError(err.message));
     });

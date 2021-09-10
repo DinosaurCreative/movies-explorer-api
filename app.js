@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
+const cors = require('cors');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -12,7 +13,10 @@ const NotFoundError = require('./errors/NotFoundError');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
 mongoose.connect('mongodb://localhost:27017/moviedb', {
   useNewUrlParser: true,
   useUnifiedTopology: true,

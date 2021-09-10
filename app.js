@@ -5,7 +5,7 @@ const { errors } = require('celebrate');
 const { PORT = 3000 } = process.env;
 const app = express();
 const errorHandler = require('./middlewares/errorHandler');
-const { createUser, login } = require('./controllers/users');
+const { createUser, login, signOut } = require('./controllers/users');
 const userRoutes = require('./routes/users');
 const { createUserValidation, loginValidation } = require('./middlewares/validators');
 const NotFoundError = require('./errors/NotFoundError');
@@ -26,6 +26,8 @@ mongoose.connect('mongodb://localhost:27017/moviedb', {
 
 app.post('/signup', createUserValidation, createUser);
 app.post('/signin', loginValidation, login);
+app.delete('/signout', signOut);
+
 app.use('/', userRoutes);
 
 app.use('*', () => {

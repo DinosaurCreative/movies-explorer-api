@@ -27,7 +27,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validat(v) {
       if (!isURL(v)) {
-        throw new Error(); // Внести необходимый тип ошибки
+        throw new Error('linkError'); // Внести необходимый тип ошибки
       }
     },
   },
@@ -36,7 +36,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validat(v) {
       if (!isURL(v)) {
-        throw new Error(); // Внести необходимый тип ошибки
+        throw new Error('linkError'); // Внести необходимый тип ошибки
       }
     },
   },
@@ -45,7 +45,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validat(v) {
       if (!isURL(v)) {
-        throw new Error(); // Внести необходимый тип ошибки
+        throw new Error('linkError'); // Внести необходимый тип ошибки
       }
     },
   },
@@ -58,12 +58,10 @@ const movieSchema = new mongoose.Schema({
   nameRU: {
     type: String,
     required: true,
-    // добавить проверку на русский язык/ возможно не понадобится
   },
   nameEn: {
     type: String,
     required: true,
-    // добавить проверку на русский язык/ возможно не понадобится
   },
   addedAt: {
     type: Date,

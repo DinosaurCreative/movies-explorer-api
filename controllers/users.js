@@ -49,7 +49,7 @@ module.exports.updateProfile = (req, res, next) => {
       } if (err.message.includes('emailError')) {
         return next(new BadRequestError(wrongEmail));
       }
-      return next(new DefaultError(err.message));
+      return next(new DefaultError(err.message, 321));
     });
 };
 
@@ -57,7 +57,6 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, email, password,
   } = req.body;
-
   bcrypt.hash(password, 10)
     .then((hash) => {
       User.create({
@@ -78,7 +77,9 @@ module.exports.createUser = (req, res, next) => {
           }
           return next(new DefaultError(err.message));
         });
-    }).catch((err) => next(new DefaultError(err.message)));
+    }).catch((err) => {
+      next(new DefaultError(err.message));
+    });
 };
 
 module.exports.login = (req, res, next) => {

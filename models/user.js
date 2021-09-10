@@ -11,21 +11,21 @@ const userSchema = new mongoose.Schema({
         throw new Error('nameError');
       }
     },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      validate(v) {
-        if (!isEmail(v)) {
-          throw new Error('emailError');
-        }
-      },
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    validate(v) {
+      if (!isEmail(v)) {
+        throw new Error('emailError');
+      }
     },
-    password: {
-      type: String,
-      required: true,
-      select: false,
-    },
+  },
+  password: {
+    type: String,
+    required: true,
+    select: false,
   },
 }, { versionKey: false });
 

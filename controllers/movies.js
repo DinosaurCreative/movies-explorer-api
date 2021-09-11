@@ -86,20 +86,3 @@ module.exports.deleteMovie = (req, res, next) => {
       }
     });
 };
-
-// module.exports.deleteMovie = (req, res, next) => {
-//   Movie.findByIdAndRemove(req.params.movieId)
-//     .orFail(new Error('UnknownId'))
-//     .then((mov) => {
-//       res.send({ message: `Фильм "${mov.nameRU}" удален!` });
-//     })
-//     .catch((err) => {
-//       if (err.message === 'UnknownId') {
-//         next(new NotFoundError(movieIdMissing));
-//       } else if (err.name === 'CastError') {
-//         next(new BadRequestError(badValue));
-//       } else {
-//         next(new DefaultError(err.message));
-//       }
-//     });
-// };

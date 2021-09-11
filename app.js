@@ -11,6 +11,7 @@ const userRoutes = require('./routes/users');
 const movieRoutes = require('./routes/movies');
 const { createUserValidation, loginValidation } = require('./middlewares/validators');
 const NotFoundError = require('./errors/NotFoundError');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,7 +29,7 @@ mongoose.connect('mongodb://localhost:27017/moviedb', {
   .catch(() => {
     console.log('not connected');
   });
-
+app.use(requestLogger);
 app.post('/signup', createUserValidation, createUser);
 app.post('/signin', loginValidation, login);
 app.delete('/signout', signOut);
@@ -39,7 +40,7 @@ app.use('/', movieRoutes);
 app.use('*', () => {
   throw new NotFoundError('Не смотри, я не накрашена!');
 });
-
+app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 

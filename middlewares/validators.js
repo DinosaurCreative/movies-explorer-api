@@ -1,6 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 
-const { /* linkRegex, */ emailRegex } = require('../utils/constants');
+const { linkRegex, emailRegex } = require('../utils/constants');
 
 const createUserValidation = celebrate({
   body: Joi.object().keys({
@@ -24,8 +24,38 @@ const updateProfileValidation = celebrate({
   }),
 });
 
+const getMoviesValidation = celebrate({
+  body: Joi.object,
+});
+
+const deleteMovieValidation = celebrate({
+  params: Joi.object().keys({
+    id: Joi.string()/* .length(24).hex() */,
+  }),
+});
+
+const createMovieValidation = celebrate({
+  body: Joi.object().keys({
+    country: Joi.string().required(),
+    director: Joi.string().required(),
+    duration: Joi.number().required(),
+    year: Joi.string().required(),
+    description: Joi.string().required(),
+    image: Joi.string().required().pattern(linkRegex),
+    trailer: Joi.string().required().pattern(linkRegex),
+    thumbnail: Joi.string().required().pattern(linkRegex),
+    owner: Joi.string(),
+    movieId: Joi.required(),
+    nameRU: Joi.string().required(),
+    nameEN: Joi.string().required(),
+  }),
+});
+
 module.exports = {
   createUserValidation,
   loginValidation,
   updateProfileValidation,
+  getMoviesValidation,
+  deleteMovieValidation,
+  createMovieValidation,
 };

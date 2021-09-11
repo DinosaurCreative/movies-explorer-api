@@ -8,6 +8,7 @@ const app = express();
 const errorHandler = require('./middlewares/errorHandler');
 const { createUser, login, signOut } = require('./controllers/users');
 const userRoutes = require('./routes/users');
+const movieRoutes = require('./routes/movies');
 const { createUserValidation, loginValidation } = require('./middlewares/validators');
 const NotFoundError = require('./errors/NotFoundError');
 
@@ -33,6 +34,7 @@ app.post('/signin', loginValidation, login);
 app.delete('/signout', signOut);
 
 app.use('/', userRoutes);
+app.use('/', movieRoutes);
 
 app.use('*', () => {
   throw new NotFoundError('Не смотри, я не накрашена!');

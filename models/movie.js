@@ -49,17 +49,19 @@ const movieSchema = new mongoose.Schema({
       }
     },
   },
-  owner: {
+  movieId: {
+    type: String,
     required: true,
   },
-  movieId: {
+  owner: {
+    type: String,
     required: true,
   },
   nameRU: {
     type: String,
     required: true,
   },
-  nameEn: {
+  nameEN: {
     type: String,
     required: true,
   },

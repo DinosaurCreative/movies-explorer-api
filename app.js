@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const { PORT = 3000 } = process.env;
 const app = express();
+const rateLimit = require('express-rate-limit');
 const errorHandler = require('./middlewares/errorHandler');
 const { createUser, login, signOut } = require('./controllers/users');
 const userRoutes = require('./routes/users');
@@ -13,22 +14,25 @@ const { createUserValidation, loginValidation } = require('./middlewares/validat
 const NotFoundError = require('./errors/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true,
 }));
+
 mongoose.connect('mongodb://localhost:27017/moviedb', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-})
-  .then(() => {
-    console.log('successfully connected');
-  })
-  .catch(() => {
-    console.log('not connected');
-  });
+}).then(() => console.log('Successfully Connected to DB'))
+  .catch(() => console.log('Connection to DB Failed'));
+
+app.use(limiter);
 app.use(requestLogger);
 app.post('/signup', createUserValidation, createUser);
 app.post('/signin', loginValidation, login);

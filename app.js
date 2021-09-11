@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const cors = require('cors');
+const helmet = require('helmet');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -18,13 +19,10 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
 });
-
+app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true,
-}));
+app.use(cors());
 
 mongoose.connect('mongodb://localhost:27017/moviedb', {
   useNewUrlParser: true,

@@ -2,11 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
+const cors = require('cors');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 const rateLimit = require('express-rate-limit');
-const cors = require('./middlewares/cors');
+// const cors = require('./middlewares/cors');
 const errorHandler = require('./middlewares/errorHandler');
 const { createUser, login, signOut } = require('./controllers/users');
 const userRoutes = require('./routes/users');

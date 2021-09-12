@@ -1,13 +1,25 @@
-const cors = require('cors');
-
-const allowedCors = [
+const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+const ALLOWED_CORS = [
   'https://watchthis.nomoredomains.club',
-  'http://watchthis.nomoredomains.club',
+  'https://api.watchthis.nomoredomains.club',
+  'http://localhost:3000',
 ];
 
-const corsOptions = {
-  origin: allowedCors,
-  credentiaals: true,
-};
+module.exports = (req, res, next) => {
+  const { method } = req;
+  const requestHeaders = req.headers['access-control-request-headers'];
+  const { origin } = req.headers;
 
-module.exports = cors(corsOptions);
+  if (ALLOWED_CORS.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+  }
+
+  if (method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
+    res.header('Access-Control-Allow-Headers', requestHeaders);
+    res.end();
+  }
+
+  next();
+};

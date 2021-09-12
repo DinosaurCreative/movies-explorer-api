@@ -17,7 +17,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint .",
     "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "ngx": "sudo nano /etc/nginx/sites-available/default",
+    "rngx": "sudo systemctl reload nginx",
+    "cerbot renew": "sudo certbot renew --pre-hook 'service nginx stop' --post-hook 'service nginx start'"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

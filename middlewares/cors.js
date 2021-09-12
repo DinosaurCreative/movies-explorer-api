@@ -1,4 +1,4 @@
-const defaultAllowedMethods = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+const allowedMethods = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 const allowedCors = [
   'https://watchthis.nomoredomains.club',
   'https://api.watchthis.nomoredomains.club',
@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
   }
 
   if (method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', defaultAllowedMethods);
+    res.header('Access-Control-Allow-Methods', allowedMethods);
     res.header('Access-Control-Allow-Headers', requestHeaders);
     res.end();
   }

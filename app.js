@@ -5,26 +5,20 @@ const helmet = require('helmet');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-const rateLimit = require('express-rate-limit');
+const limiter = require('./middlewares/limiter');
 const cors = require('./middlewares/cors');
 const errorHandler = require('./middlewares/errorHandler');
-const { createUser, login, signOut } = require('./controllers/users');
-const userRoutes = require('./routes/users');
-const movieRoutes = require('./routes/movies');
-const { createUserValidation, loginValidation } = require('./middlewares/validators');
+const rootRouter = require('./routes/index');
 const NotFoundError = require('./errors/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { dataBaseAdress } = require('./utils/config');
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
 app.use(cors);
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/moviedb', {
+mongoose.connect(dataBaseAdress, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => console.log('Successfully Connected to DB'))
@@ -32,12 +26,7 @@ mongoose.connect('mongodb://localhost:27017/moviedb', {
 
 app.use(limiter);
 app.use(requestLogger);
-app.post('/signup', createUserValidation, createUser);
-app.post('/signin', loginValidation, login);
-app.delete('/signout', signOut);
-
-app.use('/', userRoutes);
-app.use('/', movieRoutes);
+app.use('/', rootRouter);
 
 app.use('*', () => {
   throw new NotFoundError('Не смотри, я не накрашена!');

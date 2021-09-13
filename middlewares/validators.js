@@ -30,7 +30,7 @@ const getMoviesValidation = celebrate({
 
 const deleteMovieValidation = celebrate({
   params: Joi.object().keys({
-    id: Joi.string()/* .length(24).hex() */,
+    id: Joi.string().length(24).hex(),
   }),
 });
 
@@ -44,7 +44,7 @@ const createMovieValidation = celebrate({
     image: Joi.string().required().pattern(linkRegex),
     trailer: Joi.string().required().pattern(linkRegex),
     thumbnail: Joi.string().required().pattern(linkRegex),
-    owner: Joi.string(),
+    owner: Joi.string().length(24).hex(),
     movieId: Joi.required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),

@@ -15,7 +15,6 @@ const {
   wrongEmail,
   emailTaken,
   nameLengthErr,
-  aboutLengthErr,
   badEmailOrPass,
 } = require('../utils/errorMessages');
 
@@ -72,8 +71,6 @@ module.exports.createUser = (req, res, next) => {
             return next(new ConflictError(emailTaken));
           } if (err.message.includes('nameError')) {
             return next(new BadRequestError(nameLengthErr));
-          } if (err.message.includes('aboutError')) {
-            return next(new BadRequestError(aboutLengthErr));
           }
           return next(new DefaultError(err.message));
         });

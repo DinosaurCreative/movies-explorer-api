@@ -16,7 +16,8 @@ const {
   emailTaken,
   nameLengthErr,
   badEmailOrPass,
-} = require('../utils/errorMessages');
+  nameMissing,
+} = require('../utils/constants');
 const { devSecretKey } = require('../utils/config');
 
 module.exports.getCurrentUser = (req, res, next) => {
@@ -48,6 +49,8 @@ module.exports.updateProfile = (req, res, next) => {
         return next(new BadRequestError(nameLengthErr));
       } if (err.message.includes('emailError')) {
         return next(new BadRequestError(wrongEmail));
+      } if (err.code === 11000) {
+        return next(new ConflictError(emailTaken));
       }
       return next(new DefaultError(err.message, 321));
     });
@@ -68,10 +71,12 @@ module.exports.createUser = (req, res, next) => {
             return next(new BadRequestError(wrongEmail));
           } if (err.message.includes('linkError')) {
             return next(new BadRequestError(badValue));
-          } if (err.code === 11000 && err.name === 'MongoError') {
+          } if (err.code === 11000 || err.name === 'MongoError') {
             return next(new ConflictError(emailTaken));
           } if (err.message.includes('nameError')) {
             return next(new BadRequestError(nameLengthErr));
+          } if (err.message.includes('nameMissing')) {
+            return next(new BadRequestError(nameMissing));
           }
           return next(new DefaultError(err.message));
         });
@@ -82,7 +87,7 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { password, email } = req.body;
-
+  console.log(NODE_ENV);
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : devSecretKey, { expiresIn: '7d' });

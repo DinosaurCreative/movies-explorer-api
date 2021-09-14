@@ -15,6 +15,6 @@ router.get('/users/me', auth, getCurrentUser);
 router.patch('/users/me', auth, updateProfileValidation, updateProfile);
 router.post('/signup', createUserValidation, createUser);
 router.post('/signin', loginValidation, login);
-router.delete('/signout', signOut);
+router.delete('/signout', auth, signOut);
 
 module.exports = router;

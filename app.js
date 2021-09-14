@@ -12,6 +12,7 @@ const rootRouter = require('./routes/index');
 const NotFoundError = require('./errors/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { dataBaseAdress } = require('./utils/config');
+const { connected, notConnected, wrongPath } = require('./utils/constants');
 
 app.use(cors);
 app.use(helmet());
@@ -21,15 +22,15 @@ app.use(express.urlencoded({ extended: true }));
 mongoose.connect(dataBaseAdress, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-}).then(() => console.log('Successfully Connected to DB'))
-  .catch(() => console.log('Connection to DB Failed'));
+}).then(() => console.log(connected))
+  .catch(() => console.log(notConnected));
 
-app.use(limiter);
 app.use(requestLogger);
+app.use(limiter);
 app.use('/', rootRouter);
 
 app.use('*', () => {
-  throw new NotFoundError('Не смотри, я не накрашена!');
+  throw new NotFoundError(wrongPath);
 });
 app.use(errorLogger);
 app.use(errors());

@@ -7,7 +7,7 @@ const {
   movieIdMissing,
   badValue,
   ownerRigthsErr,
-} = require('../utils/errorMessages');
+} = require('../utils/constants');
 
 module.exports.getMovies = (req, res, next) => {
   Movie.find({})

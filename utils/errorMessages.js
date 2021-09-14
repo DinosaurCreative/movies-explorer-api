@@ -7,6 +7,7 @@ const usersIdMissing = 'Пользователь с указанным id не �
 const wrongEmail = 'Введен неверный имейл.';
 const emailTaken = 'Пользовател с таким имейлом уже существует.';
 const badEmailOrPass = 'Неверная почта или пароль.';
+const nameMissing = 'Отсутствует обязательное поле "Имя".';
 
 module.exports = {
   nameLengthErr,
@@ -18,4 +19,5 @@ module.exports = {
   wrongEmail,
   emailTaken,
   badEmailOrPass,
+  nameMissing,
 };

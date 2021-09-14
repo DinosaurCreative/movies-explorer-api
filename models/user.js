@@ -5,7 +5,7 @@ const { isEmail } = require('validator');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, 'nameMissing'],
     validate(v) {
       if (v.length < 2 || v.length > 30) {
         throw new Error('nameError');
@@ -14,8 +14,8 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
-    unique: true,
+    required: [true, 'emailMissing'],
+    unique: [true, 'emailError'],
     validate(v) {
       if (!isEmail(v)) {
         throw new Error('emailError');

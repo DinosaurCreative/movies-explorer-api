@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, MONGO_DB, NODE_ENV } = process.env;
 const app = express();
 const limiter = require('./middlewares/limiter');
 const cors = require('./middlewares/cors');
@@ -19,7 +19,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(dataBaseAdress, {
+mongoose.connect(NODE_ENV ? MONGO_DB : dataBaseAdress, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => console.log(connected))

@@ -1,5 +1,5 @@
 const nameLengthErr = 'Длина имени должна быть не менее двух и не более тридцати символов.';
-const badUrlErr = 'Передана некорректная URL ссылка.';
+const badUrlErr = 'Передана некорректная URL ссылка';
 const ownerRigthsErr = 'Недостаточно прав для удаления данных.';
 const movieIdMissing = 'Фильм с указанным id не найден.';
 const badValue = 'Переданы некорректные данные.';

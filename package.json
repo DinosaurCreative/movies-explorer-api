@@ -20,7 +20,8 @@
     "start": "node app.js",
     "ngx": "sudo nano /etc/nginx/sites-available/default",
     "rngx": "sudo systemctl reload nginx",
-    "cerbot renew": "sudo certbot renew --pre-hook 'service nginx stop' --post-hook 'service nginx start'"
+    "cerbot renew": "sudo certbot renew --pre-hook 'service nginx stop' --post-hook 'service nginx start'",
+    "vm": "ssh gimalaev@178.154.221.101"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

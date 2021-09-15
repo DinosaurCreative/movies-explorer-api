@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { isURL } = require('validator');
-const BadRequestError = require('../errors/BadRequestError');
 const {
   badUrlErr,
 } = require('../utils/constants');
@@ -29,27 +28,27 @@ const movieSchema = new mongoose.Schema({
   image: {
     type: String,
     required: true,
-    validat(v) {
+    validate(v) {
       if (!isURL(v)) {
-        throw new BadRequestError(badUrlErr);
+        throw badUrlErr;
       }
     },
   },
   trailer: {
     type: String,
     required: true,
-    validat(v) {
+    validate(v) {
       if (!isURL(v)) {
-        throw new BadRequestError(badUrlErr);
+        throw badUrlErr;
       }
     },
   },
   thumbnail: {
     type: String,
     required: true,
-    validat(v) {
+    validate(v) {
       if (!isURL(v)) {
-        throw new BadRequestError(badUrlErr);
+        throw badUrlErr;
       }
     },
   },

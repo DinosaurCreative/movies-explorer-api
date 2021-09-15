@@ -37,7 +37,6 @@ module.exports.updateProfile = (req, res, next) => {
       if (err.code === 11000) {
         return next(new ConflictError(emailTaken));
       } if (err.errors.email) {
-        console.log(err.errors.email.reason);
         return next(new BadRequestError(err.errors.email.reason));
       } if (err.errors.name) {
         return next(new BadRequestError(err.errors.name.reason));

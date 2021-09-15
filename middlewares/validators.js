@@ -44,19 +44,19 @@ const createMovieValidation = celebrate({
       if (isURL(value)) {
         return value;
       }
-      return helpers.message('Поле image заполнено не некорректно.');
+      return helpers.message('Поле \'image\' заполнено не некорректно.');
     }),
     trailer: Joi.string().required().custom((value, helpers) => {
       if (isURL(value)) {
         return value;
       }
-      return helpers.message('Поле trailer заполнено не некорректно.');
+      return helpers.message('Поле \'trailer\' заполнено не некорректно.');
     }),
     thumbnail: Joi.string().required().custom((value, helpers) => {
       if (isURL(value)) {
         return value;
       }
-      return helpers.message('Поле thumbnail заполнено не некорректно.');
+      return helpers.message('Поле \'thumbnail\' заполнено не некорректно.');
     }),
     owner: Joi.string().length(24).hex(),
     movieId: Joi.string().required(),

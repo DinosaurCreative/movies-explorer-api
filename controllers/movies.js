@@ -47,9 +47,11 @@ module.exports.createMovie = (req, res, next) => {
   })
     .then((movie) => res.send({ data: movie }))
     .catch((err) => {
+      const pathName = err.message.split('`')[1];
       if (err.message.includes('is required')) {
-        const pathName = err.message.split('`')[1];
-        return next(new BadRequestError([`${pathMissing} ${pathName}.`]));
+        return next(new BadRequestError(`${pathMissing} '${pathName}'.`));
+      } if (err.message.includes(`Validator failed for path \`${pathName}\``)) {
+        return next(new BadRequestError(`${err.errors[pathName].reason} в поле '${pathName}'.`));
       }
       return next(err);
     });

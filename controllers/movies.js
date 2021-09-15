@@ -1,22 +1,19 @@
 const Movie = require('../models/movie');
 const BadRequestError = require('../errors/BadRequestError');
-const DefaultError = require('../errors/DefaultError');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 const {
-  movieIdMissing,
-  badValue,
   ownerRigthsErr,
+  movieIdMissing,
+  pathMissing,
+  badValue,
+
 } = require('../utils/constants');
 
 module.exports.getMovies = (req, res, next) => {
   Movie.find({})
-    .then((movies) => {
-      res.send({ data: movies });
-    })
-    .catch((err) => {
-      next(new DefaultError(err.message));
-    });
+    .then((movies) => res.send({ data: movies }))
+    .catch((err) => next(err));
 };
 
 module.exports.createMovie = (req, res, next) => {
@@ -32,7 +29,6 @@ module.exports.createMovie = (req, res, next) => {
     nameEN,
     thumbnail,
     movieId,
-
   } = req.body;
 
   Movie.create({
@@ -51,38 +47,29 @@ module.exports.createMovie = (req, res, next) => {
   })
     .then((movie) => res.send({ data: movie }))
     .catch((err) => {
-      next(new DefaultError(err.message));
+      if (err.message.includes('is required')) {
+        const pathName = err.message.split('`')[1];
+        return next(new BadRequestError([`${pathMissing} ${pathName}.`]));
+      }
+      return next(err);
     });
 };
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.id)
-    .orFail(new Error('UnknownId'))
+    .orFail(new NotFoundError(movieIdMissing))
     .then((mov) => {
       if (String(mov.owner) !== req.user._id) {
-        next(new ForbiddenError(ownerRigthsErr));
-        return;
+        throw next(new ForbiddenError(ownerRigthsErr));
       }
       Movie.findByIdAndRemove(req.params.id)
-        .orFail(new Error('UnknownId'))
-        .then((movie) => {
-          res.send({ message: `Фильм "${movie.nameRU}" удален!` });
-        })
-        .catch((err) => {
-          if (err.message === 'UnknownId') {
-            next(new NotFoundError(movieIdMissing));
-          } else if (err.name === 'CastError') {
-            next(new BadRequestError(badValue));
-          } else {
-            next(new DefaultError(err.message));
-          }
-        });
+        .then((movie) => res.send({ message: `Фильм "${movie.nameRU}" удален!` }))
+        .catch((err) => next(err));
     })
     .catch((err) => {
-      if (err.message === 'UnknownId') {
-        next(new NotFoundError(movieIdMissing));
-      } else {
-        next(new DefaultError(err.message));
+      if (err.name === 'CastError') {
+        return next(new BadRequestError(badValue));
       }
+      return next(err);
     });
 };

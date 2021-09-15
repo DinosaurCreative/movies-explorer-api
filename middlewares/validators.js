@@ -1,26 +1,25 @@
 const { celebrate, Joi } = require('celebrate');
-
-const { linkRegex, emailRegex } = require('../utils/constants');
+const { isURL } = require('validator');
 
 const createUserValidation = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    email: Joi.string().pattern(emailRegex).required(),
+    name: Joi.string().min(2).max(30).required(),
+    email: Joi.string().email().required(),
     password: Joi.string().min(8).required(),
   }),
 });
 
 const loginValidation = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().pattern(emailRegex).required(),
+    email: Joi.string().email().required(),
     password: Joi.string().min(8).required(),
   }),
 });
 
 const updateProfileValidation = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    email: Joi.string().pattern(emailRegex).required(),
+    name: Joi.string().min(2).max(30).required(),
+    email: Joi.string().email().required(),
   }),
 });
 
@@ -41,11 +40,26 @@ const createMovieValidation = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().pattern(linkRegex),
-    trailer: Joi.string().required().pattern(linkRegex),
-    thumbnail: Joi.string().required().pattern(linkRegex),
+    image: Joi.string().required().custom((value, helpers) => {
+      if (isURL(value)) {
+        return value;
+      }
+      return helpers.message('Поле image заполнено не некорректно.');
+    }),
+    trailer: Joi.string().required().custom((value, helpers) => {
+      if (isURL(value)) {
+        return value;
+      }
+      return helpers.message('Поле trailer заполнено не некорректно.');
+    }),
+    thumbnail: Joi.string().required().custom((value, helpers) => {
+      if (isURL(value)) {
+        return value;
+      }
+      return helpers.message('Поле thumbnail заполнено не некорректно.');
+    }),
     owner: Joi.string().length(24).hex(),
-    movieId: Joi.required(),
+    movieId: Joi.string().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),

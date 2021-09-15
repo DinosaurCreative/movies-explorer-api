@@ -3,56 +3,46 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const BadRequestError = require('../errors/BadRequestError');
-const DefaultError = require('../errors/DefaultError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
-const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const { JWT_SECRET, NODE_ENV } = process.env;
 const {
   usersIdMissing,
-  badValue,
-  wrongEmail,
   emailTaken,
-  nameLengthErr,
-  badEmailOrPass,
-  nameMissing,
+  pathMissing,
+  badValue,
 } = require('../utils/constants');
 const { devSecretKey } = require('../utils/config');
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user)
-    .orFail(new Error('UnknownId'))
-    .then((user) => {
-      res.send(user);
-    })
+    .orFail(new NotFoundError(usersIdMissing))
+    .then((user) => res.send(user))
     .catch((err) => {
-      if (err.message === 'UnknownId') {
-        return next(new NotFoundError(usersIdMissing));
-      } if (err.name === 'CastError') {
-        return next(new BadRequestError(badValue));
+      if (err.name === 'CastError') {
+        next(new BadRequestError(badValue));
+        return;
       }
-      return next(new DefaultError(err.message));
+      next(err);
     });
 };
 
 module.exports.updateProfile = (req, res, next) => {
   const { name, email } = req.body;
-
   User.findByIdAndUpdate(req.user._id, { name, email }, { runValidators: true, new: true })
-    .orFail(new Error('UnknownId'))
+    .orFail(new NotFoundError(usersIdMissing))
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.message === 'UnknownId') {
-        return next(new NotFoundError(usersIdMissing));
-      } if (err.message.includes('nameError')) {
-        return next(new BadRequestError(nameLengthErr));
-      } if (err.message.includes('emailError')) {
-        return next(new BadRequestError(wrongEmail));
-      } if (err.code === 11000) {
+      if (err.code === 11000) {
         return next(new ConflictError(emailTaken));
+      } if (err.errors.email) {
+        console.log(err.errors.email.reason);
+        return next(new BadRequestError(err.errors.email.reason));
+      } if (err.errors.name) {
+        return next(new BadRequestError(err.errors.name.reason));
       }
-      return next(new DefaultError(err.message, 321));
+      return next(err);
     });
 };
 
@@ -60,6 +50,9 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, email, password,
   } = req.body;
+  if (!password) {
+    throw next(new BadRequestError(`${pathMissing} 'password'.`));
+  }
   bcrypt.hash(password, 10)
     .then((hash) => {
       User.create({
@@ -67,27 +60,20 @@ module.exports.createUser = (req, res, next) => {
       })
         .then((user) => res.send(user))
         .catch((err) => {
-          if (err.message.includes('emailError')) {
-            return next(new BadRequestError(wrongEmail));
-          } if (err.message.includes('linkError')) {
-            return next(new BadRequestError(badValue));
+          if (err.message.includes('is required')) {
+            const pathName = err.message.split('`')[1];
+            return next(new BadRequestError(`${pathMissing} '${pathName}'.`));
           } if (err.code === 11000 || err.name === 'MongoError') {
             return next(new ConflictError(emailTaken));
-          } if (err.message.includes('nameError')) {
-            return next(new BadRequestError(nameLengthErr));
-          } if (err.message.includes('nameMissing')) {
-            return next(new BadRequestError(nameMissing));
           }
-          return next(new DefaultError(err.message));
+          return next(err);
         });
-    }).catch((err) => {
-      next(new DefaultError(err.message));
-    });
+    }).catch((err) => next(err));
 };
 
 module.exports.login = (req, res, next) => {
   const { password, email } = req.body;
-  console.log(NODE_ENV);
+
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : devSecretKey, { expiresIn: '7d' });
@@ -98,12 +84,11 @@ module.exports.login = (req, res, next) => {
       }).send({ message: 'Авторизация успешна' });
     })
     .catch((err) => {
-      if (err.message === 'invailidEmailOrPassword') {
-        return next(new UnauthorizedError(badEmailOrPass));
-      } if (err.message.includes('emailError')) {
-        return next(new BadRequestError(badEmailOrPass));
+      if (err.message.includes('is required')) {
+        const pathName = err.message.split('`')[1];
+        return next(new BadRequestError(`${pathMissing} '${pathName}'.`));
       }
-      return next(new DefaultError(err.message));
+      return next(err);
     });
 };
 

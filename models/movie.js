@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 const { isURL } = require('validator');
+const BadRequestError = require('../errors/BadRequestError');
+const {
+  badUrlErr,
+} = require('../utils/constants');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -27,7 +31,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validat(v) {
       if (!isURL(v)) {
-        throw new Error('linkError'); // Внести необходимый тип ошибки
+        throw new BadRequestError(badUrlErr);
       }
     },
   },
@@ -36,7 +40,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validat(v) {
       if (!isURL(v)) {
-        throw new Error('linkError'); // Внести необходимый тип ошибки
+        throw new BadRequestError(badUrlErr);
       }
     },
   },
@@ -45,7 +49,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validat(v) {
       if (!isURL(v)) {
-        throw new Error('linkError'); // Внести необходимый тип ошибки
+        throw new BadRequestError(badUrlErr);
       }
     },
   },

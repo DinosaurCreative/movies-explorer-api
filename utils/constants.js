@@ -1,5 +1,3 @@
-const linkRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/i;
-const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i;
 const nameLengthErr = 'Длина имени должна быть не менее двух и не более тридцати символов.';
 const badUrlErr = 'Передана некорректная URL ссылка.';
 const ownerRigthsErr = 'Недостаточно прав для удаления данных.';
@@ -13,6 +11,7 @@ const nameMissing = 'Отсутствует обязательное поле "�
 const wrongPath = 'Не смотри, я не накрашена!';
 const connected = 'Successfully Connected to DB';
 const notConnected = 'Connection to DB Failed';
+const pathMissing = 'Отсутствует обязательное поле';
 
 module.exports = {
   nameLengthErr,
@@ -28,6 +27,5 @@ module.exports = {
   wrongPath,
   connected,
   notConnected,
-  linkRegex,
-  emailRegex,
+  pathMissing,
 };

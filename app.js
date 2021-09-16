@@ -13,6 +13,7 @@ const NotFoundError = require('./errors/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { dataBaseAdress } = require('./utils/config');
 const { connected, notConnected, wrongPath } = require('./utils/constants');
+const auth = require('./middlewares/auth');
 
 app.use(cors);
 app.use(helmet());
@@ -29,7 +30,7 @@ app.use(requestLogger);
 app.use(limiter);
 app.use('/', rootRouter);
 
-app.use('*', () => {
+app.use('*', auth, () => {
   throw new NotFoundError(wrongPath);
 });
 app.use(errorLogger);

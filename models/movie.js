@@ -43,15 +43,6 @@ const movieSchema = new mongoose.Schema({
       }
     },
   },
-  thumbnail: {
-    type: String,
-    required: true,
-    validate(v) {
-      if (!isURL(v)) {
-        throw badUrlErr;
-      }
-    },
-  },
   movieId: {
     type: String,
     required: true,

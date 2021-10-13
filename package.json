@@ -21,7 +21,7 @@
     "ngx": "sudo nano /etc/nginx/sites-available/default",
     "rngx": "sudo systemctl reload nginx",
     "cerbot renew": "sudo certbot renew --pre-hook 'service nginx stop' --post-hook 'service nginx start'",
-    "vm": "ssh gimalaev@178.154.221.101"
+    "vm": "ssh gimalaev@178.154.241.182"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

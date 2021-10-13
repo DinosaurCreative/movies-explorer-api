@@ -18,7 +18,6 @@ module.exports = (req, res, next) => {
   if (method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', allowedMethods);
     res.header('Access-Control-Allow-Headers', requestHeaders);
-    res.end();
   }
 
   next();

@@ -58,10 +58,10 @@ module.exports.createMovie = (req, res, next) => {
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.id)
     .orFail(new NotFoundError(movieIdMissing))
-    .then((/* mov */) => {
-      // if (String(mov.owner) !== req.user._id) {
-      //   throw next(new ForbiddenError(ownerRigthsErr));
-      // }
+    .then((mov) => {
+      if (String(mov.owner) !== req.user._id) {
+        throw next(new ForbiddenError(ownerRigthsErr));
+      }
       Movie.findByIdAndRemove(req.params.id)
         .then((movie) => res.send({ message: `Фильм "${movie.nameRU}" удален!` }))
         .catch((err) => next(err));

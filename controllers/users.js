@@ -81,7 +81,7 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
         sameSite: 'None',
         secure: true,
-      }).send({ message: 'Авторизация успешна' });
+      }).send({ message: 'Авторизация успешна' }, user);
     })
     .catch((err) => {
       if (err.message.includes('is required')) {

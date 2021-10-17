@@ -93,6 +93,9 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.signOut = (req, res, next) => {
-  res.clearCookie('_id').send({ message: 'Куки удалены' });
+  res.clearCookie('_id', {
+    sameSite: 'None',
+    secure: true,
+  }).send({ message: 'Куки удалены' });
   next();
 };

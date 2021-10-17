@@ -3,6 +3,9 @@ const allowedCors = [
   'https://watchthis.nomoredomains.club',
   'https://api.watchthis.nomoredomains.club',
   'http://localhost:3000',
+  'http://localhost:3000/',
+  'https://localhost:3000/',
+  'https://localhost:3000',
 ];
 
 module.exports = (req, res, next) => {

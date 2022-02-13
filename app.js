@@ -29,7 +29,7 @@ mongoose.connect(NODE_ENV ? MONGO_DB : dataBaseAdress, {
   .catch(() => console.log(notConnected));
 
 app.use(requestLogger);
-app.use(limiter);
+// app.use(limiter);
 app.use('/', rootRouter);
 
 app.use('*', auth, () => {

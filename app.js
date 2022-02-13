@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 
 const { PORT = 3000, MONGO_DB, NODE_ENV } = process.env;
 const app = express();
-const limiter = require('./middlewares/limiter');
+// const limiter = require('./middlewares/limiter');
 const cors = require('./middlewares/cors');
 const errorHandler = require('./middlewares/errorHandler');
 const rootRouter = require('./routes/index');

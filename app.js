@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 
 const { PORT = 3001, MONGO_DB, NODE_ENV } = dotenv.config().parsed;
-console.log(MONGO_DB)
 const app = express();
 const limiter = require('./middlewares/limiter');
 const cors = require('./middlewares/cors');

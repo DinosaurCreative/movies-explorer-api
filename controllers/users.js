@@ -7,7 +7,7 @@ const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 
-const { NODE_ENV } = dotenv.config().parsed;
+const { NODE_ENV, JWT_SECRET } = dotenv.config().parsed;
 const {
   usersIdMissing,
   emailTaken,

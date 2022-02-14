@@ -26,7 +26,7 @@ mongoose.connect(NODE_ENV ? MONGO_DB : dataBaseAdress, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => console.log(connected))
-  .catch((err) => console.log(notConnected, err));
+  .catch(() => console.log(notConnected));
 
 app.use(requestLogger);
 // app.use(limiter);

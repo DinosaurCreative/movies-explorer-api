@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
 
-const { PORT = 3001, MONGO_DB, NODE_ENV } = process.env;
+const { PORT = 3001, MONGO_DB, NODE_ENV } = dotenv.config().parsed;
+console.log(MONGO_DB)
 const app = express();
-// const limiter = require('./middlewares/limiter');
+const limiter = require('./middlewares/limiter');
 const cors = require('./middlewares/cors');
 const errorHandler = require('./middlewares/errorHandler');
 const rootRouter = require('./routes/index');
@@ -22,15 +24,14 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// mongoose.connect(NODE_ENV === 'production' ? dataBaseAdress : dataBaseAdress, {
-mongoose.connect(NODE_ENV === 'production' ? 'mongodb+srv://German:Aa0129563@movies-db.lzk7l.mongodb.net/movies-db' : 'mongodb+srv://German:Aa0129563@movies-db.lzk7l.mongodb.net/movies-db', {
+mongoose.connect(NODE_ENV === 'production' ? MONGO_DB : dataBaseAdress, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => console.log(connected))
   .catch(() => console.log(notConnected));
 
 app.use(requestLogger);
-// app.use(limiter);
+app.use(limiter);
 app.use('/', rootRouter);
 
 app.use('*', auth, () => {

@@ -25,8 +25,8 @@ app.use(express.urlencoded({ extended: true }));
 mongoose.connect(NODE_ENV === 'production' ? MONGO_DB : dataBaseAdress, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-}).then((res) => console.log(connected, res))
-  .catch((err) => console.log(notConnected, err));
+}).then(() => console.log(connected))
+  .catch(() => console.log(notConnected));
 
 app.use(requestLogger);
 // app.use(limiter);

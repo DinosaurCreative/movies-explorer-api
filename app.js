@@ -22,7 +22,8 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(NODE_ENV === 'production' ? MONGO_DB : dataBaseAdress, {
+// mongoose.connect(NODE_ENV === 'production' ? dataBaseAdress : dataBaseAdress, {
+mongoose.connect(NODE_ENV === 'production' ? 'mongodb+srv://German:Aa0129563@movies-db.lzk7l.mongodb.net/movies-db' : 'mongodb+srv://German:Aa0129563@movies-db.lzk7l.mongodb.net/movies-db', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => console.log(connected))

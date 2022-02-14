@@ -4,7 +4,7 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 
-const { PORT = 3000, MONGO_DB, NODE_ENV } = process.env;
+const { PORT = 3001, MONGO_DB, NODE_ENV } = process.env;
 const app = express();
 // const limiter = require('./middlewares/limiter');
 const cors = require('./middlewares/cors');
@@ -22,11 +22,11 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(NODE_ENV ? MONGO_DB : dataBaseAdress, {
+mongoose.connect(NODE_ENV === 'production' ? MONGO_DB : dataBaseAdress, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-}).then(() => console.log(connected))
-  .catch(() => console.log(notConnected));
+}).then((res) => console.log(connected, res))
+  .catch((err) => console.log(notConnected, err));
 
 app.use(requestLogger);
 // app.use(limiter);

@@ -1,13 +1,11 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
 const User = require('../models/user');
 
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 
-const { NODE_ENV, JWT_SECRET } = dotenv.config().parsed;
 const {
   usersIdMissing,
   emailTaken,
@@ -76,7 +74,7 @@ module.exports.login = (req, res, next) => {
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : devSecretKey, { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, devSecretKey, { expiresIn: '7d' });
       res.cookie('_id', token, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,

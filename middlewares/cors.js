@@ -2,10 +2,11 @@ const allowedMethods = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 const allowedCors = [
   'https://wootch.herokuapp.com',
   'https://wootch-this.herokuapp.com',
-  'https://wootch-this.herokuapp.com/',
   'http://localhost:3000',
-  'http://localhost:3001',
   'https://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:30001',
+  'https://localhost:30001',
   'https://localhost:3001',
 ];
 

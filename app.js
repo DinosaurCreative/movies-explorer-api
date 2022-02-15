@@ -4,7 +4,7 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 
-const PORT = 3001;
+const { PORT = 3001 } = process.env;
 const app = express();
 const limiter = require('./middlewares/limiter');
 const cors = require('./middlewares/cors');
